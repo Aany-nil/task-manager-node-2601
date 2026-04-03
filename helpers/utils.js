@@ -3,5 +3,10 @@ function isValidateEmail(email) {
   return regex.test(email);
 }
 
+function validatePassword(password) {
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+  return regex.test(password);
+}
 
-module.exports = { isValidateEmail }
+
+module.exports = { isValidateEmail, validatePassword }
