@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
 const authSchema = new mongoose.Schema({
     
@@ -27,12 +28,25 @@ const authSchema = new mongoose.Schema({
     otp: {
         
         type: String,
-        required: true
+        default: null
     },
     otpExpire: {
         type: Date,
     }
 
+});
+
+authSchema.pre('save', async function () {
+  // Only hash if password is modified or new
+  if (!this.isModified('password')) return ;
+
+  try {
+    const saltRounds = 10;
+    const salt = await bcrypt.genSalt(saltRounds);
+    this.password = await bcrypt.hash(this.password, salt);
+  } catch (err) {
+    res.status().send({ message: "server error" })
+  }
 });
 
 
