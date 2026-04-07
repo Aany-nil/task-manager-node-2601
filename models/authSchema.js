@@ -49,5 +49,9 @@ authSchema.pre('save', async function () {
   }
 });
 
+authSchema.methods.comparePassword = async function(plainPassword) {
+    return await bcrypt.compare(plainPassword, this.password);
+};
+
 
 module.exports = mongoose.model("user", authSchema);

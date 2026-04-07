@@ -50,10 +50,26 @@ const verifyOTP = async (req, res) => {
    res.status(200).send({ message: "email verified successfully" });
         
     } catch (error) {
-        
+      res.status(500).send({ message: "internal server is error"})  
     }
+};
 
+const login = async (req, res) => {
+    const {email, password}  = req.body;
+    try {
+        const user = await authSchema.findOne({ email });
+        if(!user) return res.status(400).send ({message: "Invalid credential"});
+        if(!user.isVerified) return res.status(400).send ({message: "email is not verified"});
+        const matchPassword = await user.comparePassword(password)
+       if(!matchPassword) return res.status(400).send ({message: "Invalid credential"});
+
+       res.status(200).send({ message: "Login successfully" })
+    } catch (error) {
+         res.status(500).send({ message: "internal server is error"})
+    }
 }
 
 
-module.exports = { registration, verifyOTP }
+
+
+module.exports = { registration, verifyOTP, login }
