@@ -1,9 +1,6 @@
 const nodemailer = require("nodemailer");
-
-
-// Create a transporter using SMTP
 const transporter = nodemailer.createTransport({
-  host: "gamil",
+  service: "gamil",
   port: 587,
   secure: false,
   auth: {
@@ -16,11 +13,10 @@ const transporter = nodemailer.createTransport({
 const mailsending = async({ email, subject, otp }) => {
      try {
         await transporter.sendMail({
-    from: '"Task Team" <team@taskmanager.com>', // sender address
+    from: '"Task Team" <team@taskmanager.com>',
     to: email,
     subject: subject,
-    html: `<b>Hello world?</b>
-    <b> OTP : ${otp} <b/>`,
+    html: otpTemplate(otp),
   });
      } catch (error) {
       console.log("Error while sending mail, error");  

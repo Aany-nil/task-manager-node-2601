@@ -33,5 +33,27 @@ const registration = async (req, res)=>{
     }
 }
 
+const verifyOTP = async (req, res) => {
+    const { email, otp } = req.body;
+    try {
+    const user = await authSchema.findOneAndUpdate({ 
+     email,
+     otp,
+     otpExpire: { $tg: Date.now()},
+      }, 
 
-module.exports = { registration }
+     { isVerified : true, otp: null },
+     { returnDocument : "after" },
+);
+   if(!user) return res.status(400).send({ message: "Invalid request" });
+   
+   res.status(200).send({ message: "email verified successfully" });
+        
+    } catch (error) {
+        
+    }
+
+}
+
+
+module.exports = { registration, verifyOTP }
