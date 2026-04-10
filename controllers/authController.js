@@ -21,7 +21,7 @@ const registration = async (req, res)=>{
 
         const otp_number = generateOTP();
 
-         const user = await authSchema({ fullName, email, password, otp: otp_number, otpExpire: date.now() + 10 * 60 * 1000, })
+         const user = await authSchema({ fullName, email, password, otp: otp_number, otpExpire: Date.now() + 10 * 60 * 1000, })
          user.save()
 
          await mailsending({ email, subject: "otp verification mail", otp: otp_number })
@@ -32,14 +32,13 @@ const registration = async (req, res)=>{
         
     }
 }
-
 const verifyOTP = async (req, res) => {
     const { email, otp } = req.body;
     try {
     const user = await authSchema.findOneAndUpdate({ 
      email,
      otp,
-     otpExpire: { $tg: Date.now()},
+     otpExpire: { $gte: Date.now()},
       }, 
 
      { isVerified : true, otp: null },
@@ -63,13 +62,34 @@ const login = async (req, res) => {
         const matchPassword = await user.comparePassword(password)
        if(!matchPassword) return res.status(400).send ({message: "Invalid credential"});
 
+       const accessToken = generateAccessToken({ _id: user._id, email: user.email })
+       console.log(accessToken);
+
+       res.cookie("accessToken", accessToken)
+
        res.status(200).send({ message: "Login successfully" })
     } catch (error) {
          res.status(500).send({ message: "internal server is error"})
     }
 }
 
+ const userProfile = async (req, res) => {
+  console.log(req.user);
+
+  try {
+    const userData = await authSchema.findOne({ _id: req.user._id }).select("avatar email fullName")
+    if(!userData) {
+        return res.status(404).send({ message: "user not found" })
+    }
+    res.status(200).send( userData )
+  } catch (error) {
+     res.status(500).send({ message: "internal server is error"}) 
+  }
+
+  res.send("User Profile")
+ }
 
 
 
-module.exports = { registration, verifyOTP, login }
+
+module.exports = { registration, verifyOTP, login, userProfile }
