@@ -2,6 +2,8 @@ const { mailsending } = require("../helpers/mailServices");
 const { isValidateEmail, generateOTP } = require("../helpers/utils")
 const { validatePassword} = require("../helpers/utils");
 const authSchema = require("../models/authSchema");
+const cloudinary = require('../configs/cloudinary');
+const { uploadToCloudinary } = require("../helpers/cloudinaryService");
 
 const registration = async (req, res)=>{
     const { fullName, email, password } = req.body
@@ -89,7 +91,22 @@ const login = async (req, res) => {
   res.send("User Profile")
  }
 
+ const updateProfile = async (req, res) => {
+    const { fullName } = req.body;
+    const userId = req.user._id;
+    try {
+       const avatarUrl = await uploadToCloudinary({ 
+        mimetype: req.file.mimetype, 
+        imgBuffer: req.file.buffer 
+    });
+       res.send(avatarUrl.secure_url);
+   
+    } catch (error) {
+      console.log(error);  
+    }
+ };
 
 
 
-module.exports = { registration, verifyOTP, login, userProfile }
+
+module.exports = { registration, verifyOTP, login, userProfile, updateProfile }
