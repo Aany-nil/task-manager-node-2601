@@ -6,4 +6,13 @@ const dataUrl = `data:${mimetype};base64,${imgBuffer.toString('base64')};`
        return await cloudinary.uploader.upload(dataUrl);
 }
 
-module.exports = { uploadToCloudinary };
+const destroyFromCloudinary = (url) => {
+ const publicId =  url.split("/").pop().split(".").shift();     
+cloudinary.uploader.destroy(publicId, (error, result) => {
+       if(error) {
+          console.log("destroy from cloudinary:", error)    
+       }
+});
+}
+
+module.exports = { uploadToCloudinary, destroyFromCloudinary };

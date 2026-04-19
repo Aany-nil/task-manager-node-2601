@@ -3,7 +3,7 @@ const { isValidateEmail, generateOTP } = require("../helpers/utils")
 const { validatePassword} = require("../helpers/utils");
 const authSchema = require("../models/authSchema");
 const cloudinary = require('../configs/cloudinary');
-const { uploadToCloudinary } = require("../helpers/cloudinaryService");
+const { uploadToCloudinary, destroyFromCloudinary } = require("../helpers/cloudinaryService");
 
 const registration = async (req, res)=>{
     const { fullName, email, password } = req.body
@@ -23,15 +23,20 @@ const registration = async (req, res)=>{
 
         const otp_number = generateOTP();
 
-         const user = await authSchema({ fullName, email, password, otp: otp_number, otpExpire: Date.now() + 10 * 60 * 1000, })
-         user.save()
+         const user = await authSchema({ 
+            fullName, 
+            email, 
+            password, 
+            otp: otp_number, 
+            otpExpire: Date.now() + 10 * 60 * 1000, 
+        });
+        user.save();
 
-         await mailsending({ email, subject: "otp verification mail", otp: otp_number })
+    await mailsending({ email, subject: "otp verification mail", otp: otp_number })
 
-        res.status(200).send({ message: "registration successfully"})
+    res.status(200).send({ message: "registration successfully"});
     } catch (error) {
-        res.status(500).send({ message: "internal server is error"})
-        
+        res.status(500).send({ message: "internal server is error"});   
     }
 }
 const verifyOTP = async (req, res) => {
@@ -95,11 +100,21 @@ const login = async (req, res) => {
     const { fullName } = req.body;
     const userId = req.user._id;
     try {
+        const userData = await authSchema.findOne({_id: userId});
+       
+        if(fullName.trim()) userData.fullName = fullName;
+
+       if(req.file) {
        const avatarUrl = await uploadToCloudinary({ 
         mimetype: req.file.mimetype, 
         imgBuffer: req.file.buffer 
     });
-       res.send(avatarUrl.secure_url);
+    destroyFromCloudinary(userData.avatar)
+     userData.avatar = await avatarUrl.secure_url;
+    }
+    userData.save();
+
+    res.status(200).send({message: "profile updated is successfully"})
    
     } catch (error) {
       console.log(error);  
