@@ -22,5 +22,18 @@ const generateAccessToken = (user) => {
   return token
 }
 
+function generateSlug(title) {
+  return title
+    .toString()
+    .normalize('NFD')                   // Decompose combined graphemes (accents)
+    .replace(/[\u0300-\u036f]/g, '')     // Remove accent marks
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')                // Replace spaces with -
+    .replace(/[^\w-]+/g, '')             // Remove all non-word chars (except hyphens)
+    .replace(/--+/g, '-');               // Replace multiple - with single -
+}
 
-module.exports = { isValidateEmail, validatePassword, generateOTP, generateAccessToken }
+
+
+module.exports = { isValidateEmail, validatePassword, generateOTP, generateAccessToken, generateSlug }
