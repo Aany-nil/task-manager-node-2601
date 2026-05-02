@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import { Link } from "react-router";
+import { useRegistrationMutation } from "../services/api";
 
 
 const Registration = ({ onSubmit }) => {
+  const [registerUser] = useRegistrationMutation()
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -63,7 +65,21 @@ const Registration = ({ onSubmit }) => {
     const validationErrors = validate();
     setErrors(validationErrors);
 
-    if (Object.keys(validationErrors).length !== 0) return;
+    if (Object.keys(validationErrors).length !== 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setErrors({})
+    const res = await registerUser(form);
+   if(res.error) {
+    const field = res.error.data.field;
+    if(field == "email") return setErrors ({ email: res.error.data.message });
+    if(field == "fullName") return setErrors ({ fullName: res.error.data.message });
+    if(field == "password") return setErrors ({ password: res.error.data.message });
+   }
+
+   console.log("registration successfully");
 
     try {
       setLoading(true);

@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import { Link } from "react-router";
+import { useLoginMutation } from "../services/api";
 
 
 
 const Login = ({ onSubmit }) => {
+  const [loginUser] = useLoginMutation()
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -59,7 +61,19 @@ const Login = ({ onSubmit }) => {
     const validationErrors = validate();
     setErrors(validationErrors);
 
-    if (Object.keys(validationErrors).length !== 0) return;
+    if (Object.keys(validationErrors).length !== 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    setErrors({})
+
+    const res = await loginUser(form);
+    if(res.error) {
+    const field = res.error.data.field;
+    if(field == "email") return setErrors ({ email: res.error.data.message });
+    if(field == "password") return setErrors ({ password: res.error.data.message });
+   }
+   console.log("login successfully");
 
     try {
       setLoading(true);
