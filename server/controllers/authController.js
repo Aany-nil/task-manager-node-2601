@@ -9,15 +9,15 @@ const registration = async (req, res)=>{
     const { fullName, email, password } = req.body
 
     try {
-        if(!fullName?.trim()) return res.status(400).send({ message: "FullName is required"});
-        if(!email) return res.status(400).send({ message: "email is required"});
-        if(!isValidateEmail(email)) return res.status(400).send({ message: "email is invalidate"});
-        if(!password) return res.status(400).send({ message: "password is required"});
+        if(!fullName?.trim()) return res.status(400).send({ message: "FullName is required", field: "fullName" });
+        if(!email) return res.status(400).send({ message: "email is required", field: "email" });
+        if(!isValidateEmail(email)) return res.status(400).send({ message: "email is invalidate", field: "email" });
+        if(!password) return res.status(400).send({ message: "password is required", field: "password" });
          if(!validatePassword(password))return res.status(400).send({ message: "password is invalidate"});
          
          const existingEmail = await authSchema.findOne({email});
 
-         if(existingEmail) return res.status(400).send({ message: "This Email is already registered"});
+         if(existingEmail) return res.status(400).send({ message: "This Email is already registered", field: "email" });
 
         //  generate otp
 
@@ -64,10 +64,10 @@ const login = async (req, res) => {
     const {email, password}  = req.body;
     try {
         const user = await authSchema.findOne({ email });
-        if(!user) return res.status(400).send ({message: "Invalid credential"});
-        if(!user.isVerified) return res.status(400).send ({message: "email is not verified"});
+        if(!user) return res.status(400).send ({message: "register is not verified", field: "email" });
+        if(!user.isVerified) return res.status(400).send ({message: "email is not verified", field: "email" });
         const matchPassword = await user.comparePassword(password)
-       if(!matchPassword) return res.status(400).send ({message: "Invalid credential"});
+       if(!matchPassword) return res.status(400).send ({message: "Invalid credential", field: "password" });
 
        const accessToken = generateAccessToken({ _id: user._id, email: user.email })
        console.log(accessToken);
