@@ -108,10 +108,10 @@ const Registration = ({ onSubmit }) => {
     <div className="h-screen flex items-center justify-center">
       <form
         onSubmit={handleSubmit}
-        className="max-w-md max-auto p-6 bg-white shadow space-y-4 rounded-xl w-full"
+        className="max-w-md max-auto p-6 bg-blue-400 shadow space-y-4 rounded-xl w-full"
       >
         <h2 className="mb-6 text-2xl font-semibold text-center">
-          Create Account
+          Create an Account
         </h2>
 
         <Input
@@ -150,7 +150,7 @@ const Registration = ({ onSubmit }) => {
         >
           Registration
         </Button>
-        <p className="ml-auto">Already have an account? <Link to="/login" className="text-blue-600">Login</Link></p>
+        <p className="ml-auto">Already have an account? <Link to="/login" className="text-blue-800">Login</Link></p>
       </form>
     </div>
   );

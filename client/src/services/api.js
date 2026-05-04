@@ -21,9 +21,15 @@ export const apiService = createApi({
         body: loginData,
       }),
     }),
+    getProfile: build.query({
+      query: () => "/auth/profile",
+    }),
+    getProjectList: build.query({
+      query: () => "/project/list",
+    })
   }),
 });
 
 
 
-export const {useRegistrationMutation, useLoginMutation} = apiService;
+export const {useRegistrationMutation, useLoginMutation, useGetProfileQuery, useGetProjectListQuery} = apiService;

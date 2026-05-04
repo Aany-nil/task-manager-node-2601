@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useLoginMutation } from "../services/api";
 
 
 
 const Login = ({ onSubmit }) => {
+  const navigate = useNavigate();
   const [loginUser] = useLoginMutation()
   const [form, setForm] = useState({
     email: "",
@@ -73,7 +74,10 @@ const Login = ({ onSubmit }) => {
     if(field == "email") return setErrors ({ email: res.error.data.message });
     if(field == "password") return setErrors ({ password: res.error.data.message });
    }
-   console.log("login successfully");
+   
+  setTimeout(() => {
+    navigate("/");
+  }, 1000);
 
     try {
       setLoading(true);
@@ -101,7 +105,7 @@ const Login = ({ onSubmit }) => {
     <div className="h-screen flex items-center justify-center">
       <form
         onSubmit={handleSubmit}
-        className="max-w-md max-auto p-6 bg-white shadow space-y-4 rounded-xl w-full"
+        className="max-w-md max-auto p-6 bg-sky-500 shadow space-y-4 rounded-xl w-full"
       >
         <h2 className="mb-6 text-2xl font-semibold text-center">
           Login your account
@@ -134,7 +138,7 @@ const Login = ({ onSubmit }) => {
         >
          Login
         </Button>
-        <p className="ml-auto">Don't have an account? <Link to="/registration" className="text-blue-600">Registration</Link></p>
+        <p className="ml-auto">Don't have an account? <Link to="/registration" className="text-blue-800">Registration</Link></p>
       </form>
     </div>
   );
