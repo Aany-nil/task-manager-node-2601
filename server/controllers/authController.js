@@ -6,7 +6,7 @@ const cloudinary = require('../configs/cloudinary');
 const { uploadToCloudinary, destroyFromCloudinary } = require("../helpers/cloudinaryService");
 
 const registration = async (req, res)=>{
-    const { fullName, email, password } = req.body
+    const { fullName, email, password } = req.body;
 
     try {
         if(!fullName?.trim()) return res.status(400).send({ message: "FullName is required", field: "fullName" });
@@ -76,6 +76,7 @@ const login = async (req, res) => {
 
        res.status(200).send({ message: "Login successfully" })
     } catch (error) {
+        console.log(error)
          res.status(500).send({ message: "internal server is error"})
     }
 }

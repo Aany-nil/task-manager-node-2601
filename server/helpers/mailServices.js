@@ -1,11 +1,11 @@
 const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
-  service: "gamil",
+  service: "gmail",
   port: 587,
   secure: false,
   auth: {
     user: "nilporidreamgirl123@gmail.com",
-    pass: "hzyc pfmv kqlv wnmc"
+    pass: "bayx sqmz sluf urrw"
   },
 });
 
