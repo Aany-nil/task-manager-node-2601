@@ -1,10 +1,23 @@
 import React from 'react'
 import Input from './Input';
 import Button from './Button';
+import { useCreateProjectMutation, useGetProjectListQuery } from '../../services/api';
 
-const CreateProject = () => {
-    const handleCreate = (e) => {
+const CreateProject = (modal) => {
+  const { refetch } = useGetProjectListQuery()
+  const [projectData, setProjectData] = useState({
+    title: "",
+    description: "",
+  });
+  const [CreateProject] = useCreateProjectMutation();
+    const handleCreate = async (e) => {
      e.preventDefault();
+     const res = await createProject(projectData);
+     if(res.error) {console.log(res.error);
+      return
+     }
+     refetch();
+     modal(false);
     }
   return (
     <div className="h-screen w-full bg-gray-700/10 fixed top-0 left-0 flex items-center justify-center">
@@ -19,15 +32,16 @@ const CreateProject = () => {
           label="project title"
           type="text"
           placeholder="project title here"
-       
+          onChange={(e) => 
+           setProjectData((prev) => ({ ...prev, title: e.target.value }))}     
         />
         <Input
           label="project description"
           type="text"
           placeholder="project description here"
-         
+          onChange={(e) => 
+           setProjectData((prev) => ({ ...prev, description: e.target.value }))}    
         />
-
         <Button
           type="submit" fullWidth>
         Create project

@@ -26,10 +26,21 @@ export const apiService = createApi({
     }),
     getProjectList: build.query({
       query: () => "/project/list",
-    })
+    }),
+    createProject: build.mutation({
+     query: (projectData) => ({
+        url: "/project/create",
+        method: "POST",
+        body: projectData,
+     }),
+    }),
   }),
 });
 
 
 
-export const {useRegistrationMutation, useLoginMutation, useGetProfileQuery, useGetProjectListQuery} = apiService;
+export const {
+  useRegistrationMutation, 
+  useLoginMutation, 
+  useGetProfileQuery, 
+  useGetProjectListQuery, useCreateProjectMutation} = apiService;

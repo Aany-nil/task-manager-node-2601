@@ -9,6 +9,7 @@ import CreateProject from '../components/ui/CreateProject';
 const Dashboard = () => {
 const { data, isLoading } = useGetProfileQuery();
 const { data: projectList, isLoading: projectLoading } = useGetProjectListQuery();
+const [modal, setModal] = useState(false);
 
  if(isLoading) return <Loader />
 
@@ -17,7 +18,11 @@ const { data: projectList, isLoading: projectLoading } = useGetProjectListQuery(
   }
   return (
     <div className="">
-        <Button className="fixed bottom-10 right-5 size-lg">+ Create project</Button>
+        <Button
+        onClick={() => setModal (true)}
+         className="fixed bottom-10 right-5 
+         size-lg">
+            + Create project</Button>
          <div className="py-8 bg-blue-200">
             <div className="container flex justify-between">
                 <h1 className="text-4xl">Task Manager</h1>
@@ -38,9 +43,9 @@ const { data: projectList, isLoading: projectLoading } = useGetProjectListQuery(
             <TaskCard key={project._id} project= {project} />
             ))}
      </div>
-     <CreateProject />
+     {modal && <CreateProject modal={(mode) => setModal(mode)} />}   
     </div>
-  )
-}
+  );
+};
 
 export default Dashboard;
