@@ -19,7 +19,7 @@ const generateOTP = () => {
 
 const generateAccessToken = (user) => {
   const token = jwt.sign(user, process.env.JWT_SEC)
-  return token
+  return token;
 }
 
 function generateSlug(title) {

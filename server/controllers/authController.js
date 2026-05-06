@@ -1,5 +1,5 @@
 const { mailsending } = require("../helpers/mailServices");
-const { isValidateEmail, generateOTP } = require("../helpers/utils")
+const { isValidateEmail, generateOTP, generateAccessToken } = require("../helpers/utils")
 const { validatePassword} = require("../helpers/utils");
 const authSchema = require("../models/authSchema");
 const cloudinary = require('../configs/cloudinary');
@@ -68,11 +68,10 @@ const login = async (req, res) => {
         if(!user.isVerified) return res.status(400).send ({message: "email is not verified", field: "email" });
         const matchPassword = await user.comparePassword(password)
        if(!matchPassword) return res.status(400).send ({message: "Invalid credential", field: "password" });
-
        const accessToken = generateAccessToken({ _id: user._id, email: user.email })
        console.log(accessToken);
 
-       res.cookie("accessToken", accessToken)
+       res.cookie ("accessToken", accessToken);
 
        res.status(200).send({ message: "Login successfully" })
     } catch (error) {
