@@ -5,7 +5,8 @@ import PriorityBadge from "./PriorityBadged";
 
 const TaskCard = ({ project }) => {
   return (
-    <Link to="/id" 
+    <Link 
+    to={`/${project.slug}`} 
     className="w-64 bg-white shadow-[0px_0px_15px_rgba(0,0,0,0.09)] p-9 space-y-3 relative overflow-hidden">
       <div className="w-24 h-24 bg-violet-500 rounded-full absolute -right-5 -top-7">
         <p className="absolute bottom-6 left-7 text-white text-2xl">{project?.tasks.length}</p>

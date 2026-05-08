@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Input from './Input';
 import Button from './Button';
 import { useCreateProjectMutation, useGetProjectListQuery } from '../../services/api';
@@ -23,7 +23,7 @@ const CreateProject = (modal) => {
     <div className="h-screen w-full bg-gray-700/10 fixed top-0 left-0 flex items-center justify-center">
       <form
         onSubmit={handleCreate}
-        className="max-w-md max-auto p-6 bg-sky-500 shadow space-y-4 rounded-xl w-full"
+        className="max-w-md max-auto p-6 bg-blue-400 shadow space-y-4 rounded-xl w-full"
       >
         <h2 className="mb-6 text-2xl font-semibold text-center">
           Create a new project

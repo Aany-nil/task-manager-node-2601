@@ -34,6 +34,9 @@ export const apiService = createApi({
         body: projectData,
      }),
     }),
+    getProjectDetails: build.query({
+     query: (slug) => `/project/details/${slug}`,
+    }),
   }),
 });
 
@@ -43,4 +46,7 @@ export const {
   useRegistrationMutation, 
   useLoginMutation, 
   useGetProfileQuery, 
-  useGetProjectListQuery, useCreateProjectMutation} = apiService;
+  useGetProjectListQuery, 
+  useCreateProjectMutation, 
+  useGetProjectDetailsQuery,
+} = apiService;
