@@ -1,4 +1,5 @@
 const { generateSlug } = require("../helpers/utils");
+const authSchema = require("../models/authSchema");
 const projectSchema = require("../models/projectSchema");
 
 const createProject = async (req, res) => {
@@ -32,13 +33,31 @@ const projectList = async (req, res) => {
       title: {
       $regex: search || " ", $options: "i"
     }
-  }).populate("author members", "fullName avatar").select("title description tasks._id");
+  }).populate("author members", "fullName avatar").select("title description tasks._id slug");
     if(!projects) return res.status(400).send({ message: "project not found" });
      res.status(200).send({ projects })
   } catch (error) {
     res.status(500).send({ message: "Internal server is error" });
   }
 };
+
+const projectDetails = async (req, res) => {
+  const { slug } = req.params;
+try {
+  const project = await projectSchema.findOne({
+    $or: [{ author:  req.user._id },  { members: req.user._id }], 
+    slug, 
+  }).populate("author members", "fullName avatar");
+  
+  if(!project) {
+    return res.status(404).send({ message: "Not found" });
+  }
+  res.status(200).send(project);
+} catch (error) {
+  console.log(error);
+}
+};
+
 
 const addTeamMembersToProject = async (req, res) => {
   const { email, projectId } =  req.body;
@@ -117,4 +136,4 @@ const addTaskToProject = async (req, res) => {
 
 
 
-module.exports = { createProject, projectList, addTeamMembersToProject, addTaskToProject };
+module.exports = { createProject, projectList, addTeamMembersToProject, addTaskToProject, projectDetails };
