@@ -121,7 +121,7 @@ const addTaskToProject = async (req, res) => {
 
    const projectData = await projectSchema.findOneAndUpdate(
     { _id: projectId },
-    { task: {title, description, priority, assignedTo} },
+    { $push: { tasks: {title, description, priority, assignedTo} } },
     { returnDocument: "after" },
    );
 
