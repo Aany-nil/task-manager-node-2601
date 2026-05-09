@@ -37,6 +37,13 @@ export const apiService = createApi({
     getProjectDetails: build.query({
      query: (slug) => `/project/details/${slug}`,
     }),
+    addNewTask: build.mutation({
+     query: (taskData) => ({
+        url: "/project/addtask",
+        method: "POST",
+        body: taskData,
+     }),
+    }),
   }),
 });
 
@@ -49,4 +56,5 @@ export const {
   useGetProjectListQuery, 
   useCreateProjectMutation, 
   useGetProjectDetailsQuery,
+  useAddNewTaskMutation,
 } = apiService;

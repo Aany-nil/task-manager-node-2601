@@ -20,7 +20,7 @@ const TaskCard = ({ project }) => {
       <p className="text-sm text-zinc-500 leading-6">
         {project?.description}
       </p>
-      {project?.members && project?.members.length > 0 && <AssignedUsers members={project?.members} />}
+      {project?.members && project?.members.length > 0 && (<AssignedUsers members={project?.members} />)}
     </Link>
   );
 };
